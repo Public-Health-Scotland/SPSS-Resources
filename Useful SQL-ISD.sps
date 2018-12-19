@@ -1,6 +1,4 @@
 ﻿*Some tips and examples of SQL in SPSS using SMRA views, which can be applied to other databases
-Updated July 2017
-Jaime Villacampa
 
 *SQL always needs two parameters: SELECT (what fields you want) and FROM (what table you want).
 *WHERE is another command highly used, it is used to add any condition (e.g. time period, age, diagnosis).
@@ -310,6 +308,22 @@ GET DATA
   /ASSUMEDSTRWIDTH=255.
 CACHE.
 EXECUTE.
+
+*********************************************
+How to select the values of the last record when aggregating
+*********************************************.
+*This query selects a row per patient and then choses the last datazone recorded for that based on the last discharge_date.
+GET DATA
+  /TYPE=ODBC
+  /CONNECT=!connect
+  /SQL = "SELECT distinct link_no, " +
+        " MAX( datazone_2011 ) KEEP ( DENSE_RANK LAST ORDER BY discharge_date) as datazone_2011 " +
+    "FROM ANALYSIS.SMR04_PI " +
+    "WHERE discharge_date between '20017-04-01' and '2018-03-31' " +
+        "group by link_no  "
+  /ASSUMEDSTRWIDTH = 255.
+ CACHE.
+ EXECUTE.
 
 **********************************************************************
 How to extract data from one table if it exists in another table/query
